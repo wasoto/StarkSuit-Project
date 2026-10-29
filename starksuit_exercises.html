@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Project Starksuit — Exercise Reference</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #0d1117;
+    color: #c9d1d9;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  h1 {
+    text-align: center;
+    font-size: 28px;
+    color: #58a6ff;
+    margin-bottom: 4px;
+    letter-spacing: 2px;
+  }
+  .subtitle {
+    text-align: center;
+    color: #8b949e;
+    font-size: 14px;
+    margin-bottom: 30px;
+  }
+  .nav-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .nav-tab {
+    padding: 10px 20px;
+    background: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 8px;
+    color: #8b949e;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s;
+  }
+  .nav-tab:hover { border-color: #58a6ff; color: #58a6ff; }
+  .nav-tab.active { background: #1a3a5c; border-color: #58a6ff; color: #58a6ff; font-weight: 600; }
+  .session-section { display: none; }
+  .session-section.active { display: block; }
+  .session-header {
+    font-size: 20px;
+    color: #58a6ff;
+    margin-bottom: 6px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #21262d;
+  }
+  .session-sub {
+    font-size: 13px;
+    color: #8b949e;
+    margin-bottom: 20px;
+  }
+  .exercise-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+    margin-bottom: 30px;
+  }
+  .exercise-card {
+    background: #161b22;
+    border: 1px solid #21262d;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .exercise-card:hover { border-color: #30363d; }
+  .exercise-card .name {
+    font-size: 15px;
+    font-weight: 600;
+    color: #e6edf3;
+    padding: 12px 14px 4px;
+  }
+  .exercise-card .sets {
+    font-size: 12px;
+    color: #f0883e;
+    padding: 0 14px;
+    font-weight: 500;
+    margin-bottom: 4px;
+  }
+  .video-wrap {
+    position: relative;
+    background: #000;
+    border-radius: 0 0 10px 10px;
+    overflow: hidden;
+  }
+  video {
+    width: 100%;
+    display: block;
+    background: #000;
+  }
+  .fullscreen-btn {
+    position: absolute;
+    bottom: 36px;
+    right: 8px;
+    background: rgba(0,0,0,0.65);
+    border: 1px solid rgba(255,255,255,0.25);
+    color: #fff;
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+    line-height: 1;
+    pointer-events: auto;
+  }
+  .fullscreen-btn:hover { background: rgba(88,166,255,0.5); }
+  .video-placeholder {
+    width: 100%;
+    height: 160px;
+    background: #0d1117;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0 0 10px 10px;
+    color: #484f58;
+    font-size: 13px;
+    border-top: 2px solid #30363d;
+  }
+  .exercise-card .desc {
+    font-size: 12px;
+    color: #8b949e;
+    line-height: 1.5;
+    padding: 8px 14px;
+  }
+  .exercise-card .tip {
+    font-size: 11px;
+    color: #3fb950;
+    padding: 0 14px 4px;
+    font-style: italic;
+  }
+
+  .badge {
+    display: inline-block;
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin: 0 14px 6px;
+    font-weight: 600;
+  }
+  .warmup-badge { background: #1c355a; color: #58a6ff; }
+  .cooldown-badge { background: #3d1f2e; color: #f778ba; }
+  .offday-badge { background: #1a3a1a; color: #3fb950; }
+  .phase2-badge { background: #3d2a0e; color: #d29922; }
+  .pull-badge { background: #1a3a1a; color: #3fb950; }
+  .push-badge { background: #3d1f0e; color: #f0883e; }
+  .flow-badge { background: #1c2d3d; color: #58d5ff; }
+  .core-badge { background: #2a1f0e; color: #e3b341; }
+  .mobility-badge { background: #1a2d1a; color: #7ee787; }
+  .footer {
+    text-align: center;
+    color: #484f58;
+    font-size: 12px;
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid #21262d;
+  }
+  .stats {
+    text-align: center;
+    margin-bottom: 16px;
+    color: #484f58;
+    font-size: 12px;
+  }
+  .missing-vid {
+    text-align: center;
+    margin-top: 4px;
+    font-size: 11px;
+    color: #f0883e;
+    padding: 0 14px;
+  }
+</style>
+</head>
+<body>
+
+<h1>PROJECT STARKSUIT</h1>
+<div class="subtitle">Exercise Reference Guide — Phase 1 • 11 Videos Local • Download the rest</div>
+
+<div class="stats">11 of 41 exercises have local videos • Download remaining videos using prompts below</div>
+
+<div class="nav-tabs">
+  <div class="nav-tab active" onclick="showSession('A')">Session A — Flow + Mobility</div>
+  <div class="nav-tab" onclick="showSession('B')">Session B — Pull/Push</div>
+  <div class="nav-tab" onclick="showSession('C')">Session C — Core/Locomotion</div>
+  <div class="nav-tab" onclick="showSession('warmup')">Warm-Up</div>
+  <div class="nav-tab" onclick="showSession('cooldown')">Cooldowns</div>
+  <div class="nav-tab" onclick="showSession('offday')">Off-Day</div>
+  <div class="nav-tab" onclick="showSession('phase2')">Phase 2 Preview</div>
+</div>
+
+<!-- ==================== SESSION A ==================== -->
+<div id="A" class="session-section active">
+  <div class="session-header">Session A — Flow + Mobility</div>
+  <div class="session-sub">3 rounds • 60 sec rest between rounds • 20–25 min total</div>
+  <div class="exercise-grid">
+
+    <!-- Sidemonkey to Standup -->
+    <div class="exercise-card">
+      <span class="badge flow-badge">LEOMOVES FUNDAMENTAL</span>
+      <div class="name">Sidemonkey to Standup</div>
+      <div class="video-wrap">
+        <video muted playsinline loop controls id="vid-1" preload="metadata">
+          <source src="videos/sidemonkey.mp4" type="video/mp4">
+        </video>
+        <button class="fullscreen-btn" onclick="goFullscreen('vid-1')" title="Expand">⛶</button>
+      </div>
+      <div class="desc">Start in side monkey (one hand on floor, one leg wide). Explode up to standing using momentum.</div>
+      <div class="tip">6 reps/side. Focus on momentum, not raw strength.</div>
+    </div>
+
+    <!-- Shuffle Step -->
+    <div class="exercise-card">
+      <span class="badge flow-badge">LOCOMOTION</span>
+      <div class="name">Shuffle Step</div>
+      <div class="video-wrap">
+        <video muted playsinline loop controls id="vid-shuffle" preload="metadata">
+          <source src="videos/shuffle.mp4" type="video/mp4">
+        </video>
+        <button class="fullscreen-btn" onclick="goFullscreen('vid-shuffle')" title="Expand">⛶</button>
+      </div>
+      <div class="desc">Get into a low squat, hands near floor. Shuffle side to side, staying low.</div>
+      <div class="tip">10 steps per direction. Hip rotation + coordination.</div>
+    </div>
+
+    <!-- Swipe Step -->
+    <div class="exercise-card">
+      <span class="badge flow-badge">LOCOMOTION</span>
+      <div class="name">Swipe Step</div>
+      <div class="video-wrap">
+        <video muted playsinline loop controls id="vid-swipe" preload="metadata">
+          <source src="videos/swipe_step.mp4" type="video/mp4">
+        </video>
+        <button class="fullscreen-btn" onclick="goFullscreen('vid-swipe')" title="Expand">⛶</button>
+      </div>
+      <div class="desc">Cross one leg in front while stepping to the side, then straighten. Alternating sweep.</div>
+      <div class="tip">8 reps/side. Posterior chain + balance.</div>
+    </div>
+
+    <!-- Bear Crawl -->
+    <div class="exercise-card">
+      <span class="badge flow-badge">LOCOMOTION</span>
+      <div class="name">Bear Crawl</div>
+      <div class="video-wrap">
+        <video muted playsinline loop controls id="vid-bear" preload="metadata">
+          <source src="videos/bear_crawl.mp4" type="video/mp4">
+        </video>
+        <button class="fullscreen-btn" onclick="goFullscreen('vid-bear')" title="Expand">⛶</button>
+      </div>
+      <div class="desc">All fours, knees hovering 1 inch off ground. Crawl opposite hand+foot together.</div>
+      <div class="tip">20 sec forward + 20 sec back.</div>
+    </div>
+
+    <!-- Crab Walk -->
+    <div class="exercise-card">
+      <span class="badge flow-badge">LOCOMOTION</span>
+      <div class="name">Crab Walk</div>
+      <div class="video-wrap">
+        <div class="video-placeholder">Video not downloaded yet</div>
+      </div>
+      <div class="desc">Sit with hands behind, hips lifted. Walk forward with opposite hand+foot reach.</div>
+      <div class="tip">20 sec forward + 20 sec back. Opens hips AND shoulders.</div>
+      <div class="missing-vid">⬇ Download crab_walk.mp4 using prompt below</div>
+    </div>
+
+    <!-- Dead Bug -->
+    <div class="exercise-card">
+      <span class="badge core-badge">CORE</span>
+      <div class="name">Dead Bug</div>
+      <div class="video-wrap">
+        <div class="video-placeholder">Video not downloaded yet</div>
+      </div>
+      <div class="desc">Lie on back, arms to ceiling, legs at 90°. Lower opposite arm+leg slowly.</div>
+      <div class="tip">8 reps/side. Keep lower back pressed down.</div>
+      <div class="missing-vid">⬇ Download dead_bug.mp4 using prompt below</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ==================== SESSION B ==================== -->
+<div id="B" class="session-section">
+  <div class="session-header">Session B — Flow + Pull/Push</div>
+  <div class="session-sub">3 rounds • 60 sec rest between rounds • 20–25 min total</div>
+  <div class="exercise-grid">
+
+    <!-- Sidemonkey to Standup -->
+    <div class="exercise-card">
+      <span class="badge flow-badge">LEOMOVES FUNDAMENTAL</span>
+      <div class="name">Sidemonkey to Standup</div>
+      <div class="video-wrap">
+        <video muted playsinline loop controls id="vid-2" preload="metadata">
+          <source src="videos/sidemonkey.mp4" type="video/mp4">
+        </video>
+        <button class="fullscreen-btn" onclick="goFullscreen('vid-2')" title="Expand">⛶</button>
+      </div>
+      <div class="desc">Same as Session A. Momentum-driven hip mobility move.</div>
+      <div class="tip">6 reps/side.</div>
+    </div>
+
+    <!-- Reach Back -->
+    <div class="exercise-card">
+      <span class="badge mobility-badge">MOBILITY / THERAPY</span>
+      <div class="name">Reach Back</div>
+      <div class="video-wrap">
+        <video muted playsinline loop controls id="vid-reach" preload="metadata">
+          <source src="videos/reach_back.mp4" type="video/mp4">
+        </video>
+        <button class="fullscreen-btn" onclick="goFullscreen('vid-reach')" title="Expand">⛶</button>
+      </div>
+      <div class="desc">From a low lunge, reach one arm back under your body, rotating chest open.</div>
+      <div class="tip">8 reps/side. Therapy for tight shoulders.</div>
+    </div>
+
+    <!-- Push-up -->
+    <div class="exercise-card">
+      <span class="badge push-badge">PUSH</span>
+      <div class="name">Push-Up Flow</div>
+      <div class="video-wrap">
+        <div class="video-placeholder">Video not downloaded yet</div>
+      </div>
+      <div class="desc">Standard push-up with a 3-second slow descent. Chest to floor, elbows ~45°.</div>
+      <div class="tip">8–10 reps. Drop to knees if form breaks.</div>
+      <div class="missing-vid">⬇ Download push_up.mp4 using prompt below</div>
+    </div>
+
+    <!-- Assisted Pull-up -->
+    <div class="exercise-card">
+      <span class="badge pull-badge">PULL — POWER TOWER</span>
+      <div class="name">Assisted Pull-Up</div>
+      <div class="video-wrap">
+        <div class="video-placeholder">Video not downloaded yet</div>
+      </div>
+      <div class="desc">Use power tower assisted pull-up machine. Shoulder blades down first, then pull.</div>
+      <div class="tip">5–8 reps. No shrugging — protects traps.</div>
+      <div class="missing-vid">⬇ Download assisted_pullup.mp4 using prompt below</div>
+    </div>
+
+    <!-- Dips -->
+    <div class="exercise-card">
+      <span class="badge push-badge">PUSH — POWER TOWER</span>
+      <div class="name">Dips</div>
+      <div class="video-wrap">
+        <div class="video-placeholder">Video not downloaded yet</div>
+      </div>
+      <div class="desc">Power tower dips. Only 60° range — shallow, no deep stretch. Shoulders packed down.</div>
+      <div class="tip">5–8 reps. Shallow range protects shoulder tendons.</div>
+      <div class="missing-vid">⬇ Download dips.mp4 using prompt below</div>
+    </div>
+
+    <!-- Side Kick Crunch -->
+    <div class="exercise-card">
+      <span class="badge core-badge">CORE</span>
+      <div class="name">Side Kick Crunch</div>
+      <div class="video-wrap">
+        <video muted playsinline loop controls id="vid-sidekick" preload="metadata">
+          <source src="videos/side_kick.mp4" type="video/mp4">
+        </video>
+        <button class="fullscreen-btn" onclick="goFullscreen('vid-sidekick')" title="Expand">⛶</button>
+      </div>
+      <div class="desc">Lie on side. Kick top leg up while crunching torso toward it. Obliques + hip stability.</div>
+      <div class="tip">8 reps/side. Controlled, not flashy.</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ==================== SESSION C ==================== -->
+<div id="C" class="session-section">
+  <div class="session-header">Session C — Flow + Core & Locomotion</div>
+  <div class="session-sub">3 rounds • 60 sec rest between rounds • 20–25 min total</div>
+  <div class="exercise-grid">
+
+    <!-- Kneeling Cross Kick to Squat -->
+    <div class="exercise-card">
+      <span class="badge flow-badge">LEOMOVES + MOBILITY</span>
+      <div class="name">Kneeling Cross Kick to Squat</div>
+      <div class="video-wrap">
+        <div class="video-placeholder">Video not downloaded yet</div>
+      </div>
+      <div class="desc">From kneeling, kick leg across and under, then drive up into a squat.</div>
+      <div class="tip">8 reps/side. Stop if left hip pinches.</div>
+      <div class="missing-vid">⬇ Download cross_kick.mp4 using prompt below</div>
+    </div>
+
+    <!-- Scorpion Reach -->
+    <div class="exercise-card">
+      <span class="badge mobility-badge">MOBILITY</span>
+      <div class="name">Scorpion Reach</div>
+      <div class="video-wrap">
+        <video muted playsinline loop controls id="vid-scorpion" preload="metadata">
+          <source src="videos/scorpion.mp4" type="video/mp4">
+        </video>
+        <button class="fullscreen-btn" onclick="goFullscreen('vid-scorpion')" title="Expand">⛶</button>
+      </div>
+      <div class="desc">Lie face down. Reach one arm back toward opposite foot. Thoracic rotation + glute activation.</div>
+      <div class="tip">6 reps/side. Keep hips stable.</div>
+    </div>
+
+    <!-- Beast Hold -->
+    <div class="exercise-card">
+      <span class="badge core-badge">CORE / STABILITY</span>
+      <div class="name">Beast Hold</div>
+      <div class="video-wrap">
+        <div class="video-placeholder">Video not downloaded yet</div>
+      </div>
+      <div class="desc">All fours, knees hovering 1 inch. Hold perfectly still. Deep core + shoulder stability.</div>
+      <div class="tip">30 seconds. Don't move. Breathe.</div>
+      <div class="missing-vid">⬇ Download beast_hold.mp4 using prompt below</div>
+    </div>
+
+    <!-- Slow Squat to Cossack -->
+    <div class="exercise-card">
+      <span class="badge mobility-badge">MOBILITY + STRENGTH</span>
+      <div class="name">Slow Squat to Cossack</div>
+      <div class="video-wrap">
+        <video muted playsinline loop controls id="vid-cossack" preload="metadata">
+          <source src="videos/cossack.mp4" type="video/mp4">
+        </video>
+        <button class="fullscreen-btn" onclick="goFullscreen('vid-cossack')" title="Expand">⛶</button>
+      </div>
+      <div class="desc">Deep squat → shift to one side (Cossack stretch) → return → other side.</div>
+      <div class="tip">10 reps per side. Slow tempo. Opens hips.</div>
+    </div>
+
+    <!-- Plank to Down Dog -->
+    <div class="exercise-card">
+      <span class="badge mobility-badge">MOBILITY + CORE</span>
+      <div class="name">Plank to Down Dog</div>
+      <div class="video-wrap">
+        <video muted playsinline loop controls id="vid-plank" preload="metadata">
+          <source src="videos/plank_down_dog.mp4" type="video/mp4">
+        </video>
+        <button class="fullscreen-btn" onclick="goFullscreen('vid-plank')" title="Expand">⛶</button>
+      </div>
+      <div class="desc">From plank, push hips up to downward dog, walk feet forward back to plank.</div>
+      <div class="tip">8 reps. Shoulder mobility + hamstring + core.</div>
+    </div>
+
+    <!-- Glute Bridge -->
+    <div class="exercise-card">
+      <span class="badge core-badge">POSTERIOR CHAIN</span>
+      <div class="name">Glute Bridge Hold</div>
+      <div class="video-wrap">
+        <div class="video-placeholder">Video not downloaded yet</div>
+      </div>
+      <div class="desc">Lie on back, feet flat. Drive hips up squeezing glutes. Hold top position.</div>
+      <div class="tip">30 second hold. Counteracts sitting + baby-bending.</div>
+      <div class="missing-vid">⬇ Download glute_bridge.mp4 using prompt below</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ==================== WARM-UP ==================== -->
+<div id="warmup" class="session-section">
+  <div class="session-header">Warm-Up — Do Every Session (3–4 min)</div>
+  <div class="session-sub">These 4 moves are your daily primer.</div>
+  <div class="exercise-grid">
+
+    <div class="exercise-card">
+      <span class="badge warmup-badge">WARM-UP</span>
+      <div class="name">Cat-Cow</div>
+      <div class="video-wrap">
+        <div class="video-placeholder">Video not downloaded yet</div>
+      </div>
+      <div class="desc">On all fours. Arch spine up (cat), sink belly down (cow). Move slowly with breath.</div>
+      <div class="tip">10 slow reps.</div>
+      <div class="missing-vid">⬇ Download cat_cow.mp4 using prompt below</div>
+    </div>
+
+    <div class="exercise-card">
+      <span class="badge warmup-badge">WARM-UP</span>
+      <div class="name">Thread-the-Needle</div>
+      <div class="video-wrap">
+        <div class="video-placeholder">Video not downloaded yet</div>
+      </div>
+      <div class="desc">From all fours, thread one arm under body, rotate chest toward floor.</div>
+      <div class="tip">6 reps/side. Upper back/shoulder stretch.</div>
+      <div class="missing-vid">⬇ Download thread_needle.mp4 using prompt below</div>
+    </div>
+
+    <div class="exercise-card">
+      <span class="badge warmup-badge">WARM-UP</span>
+      <div class="name">World's Greatest Stretch</div>
+      <div class="video-wrap">
+        <div class="video-placeholder">Video not downloaded yet</div>
+      </div>
+      <div class="desc">Lunge, inside hand on floor, rotate same-arm reach to ceiling.</div>
+      <div class="tip">4 reps/side.</div>
+      <div class="missing-vid">⬇ Download worldsgreatest.mp4 using prompt below</div>
+    </div>
+
+    <div class="exercise-card">
+      <span class="badge warmup-badge">WARM-UP</span>
+      <div class="name">Wrist Circles + Prep</div>
+      <div class="video-wrap">
+        <div class="video-placeholder">Video not downloaded yet</div>
+      </div>
+      <div class="desc">Extend arms, rotate wrists full circles. Add prayer stretch and reverse prayer.</div>
+      <div class="tip">10 circles each direction. Prepares for floor work.</div>
+      <div class="missing-vid">⬇ Download wrist_prep.mp4 using prompt below</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ==================== COOLDOWNS ==================== -->
+<div id="cooldown" class="session-section">
+  <div class="session-header">Cooldown — Pick 3–4 After Each Session (2 min)</div>
+  <div class="exercise-grid">
+
+    <div class="exercise-card">
+      <span class="badge cooldown-badge">COOLDOWN</span>
+      <div class="name">Child's Pose</div>
+      <div class="video-wrap">
+        <div class="video-placeholder">Video not downloaded yet</div>
+      </div>
+      <div class="desc">Kneel, sit back on heels, fold forward. Forehead on floor.</div>
+      <div class="tip">30 sec.</div>
+      <div class="missing-vid">⬇ Download childs_pose.mp4 using prompt below</div>
+    </div>
+
+    <div class="exercise-card">
+      <span class="badge cooldown-badge">COOLDOWN</span>
+      <div class="name">Seated Forward Fold</div>
+      <div class="video-wrap">
+        <div class="video-placeholder">Video not downloaded yet</div>
+      </div>
+      <div class="desc">Sit with legs straight. Hinge at hips, reach toward feet.</div>
+      <div class="tip">30 sec. Hamstring stretch.</div>
+      <div class="missing-vid">⬇ Download forward_fold.mp4 using prompt below</div>
+    </div>
+
+    <div class="exercise-card">
+      <span class="badge cooldown-badge">COOLDOWN</span>
+      <div class="name">Neck Releases</div>
+      <div class="video-wrap">
+        <div class="video-placeholder">Video not downloaded yet</div>
+      </div>
+      <div class="desc">Gently bring ear toward shoulder. Barely-there finger assistance only.</div>
+      <div class="tip">30 sec/side. NO FORCE.</div>
+      <div class="missing-vid">⬇ Download neck_releases.mp4 using prompt below</div>
+    </div>
+
+    <div class="exercise-card">
+      <span class="badge cooldown-badge">COOLDOWN</span>
+      <div class="name">Deep Breathing</div>
+      <div class="video-wrap">
+        <div class="video-placeholder">No video needed — just breathe</div>
+      </div>
+      <div class="desc">Inhale 4s through nose, exhale 6s through mouth.</div>
+      <div class="tip">60 seconds. Parasympathetic activation.</div>
+    </div>
+
+    <div class="exercise-card">
+      <span class="badge cooldown-badge">COOLDOWN</span>
+      <div class="name">Chest Doorway Stretch</div>
+      <div class="video-wrap">
+        <div class="video-placeholder">Video not downloaded yet</div>
+      </div>
+      <div class="desc">Forearms on door frame at shoulder height. Step through gently.</div>
+      <div class="tip">30 sec/side. Counteracts desk + baby posture.</div>
+      <div class="missing-vid">⬇ Download chest_stretch.mp4 using prompt below</div>
+    </div>
+
+    <div class="exercise-card">
+      <span class="badge cooldown-badge">COOLDOWN</span>
+      <div class="name">Figure-4 Stretch</div>
+      <div class="video-wrap">
+        <div class="video-placeholder">Video not downloaded yet</div>
+      </div>
+      <div class="desc">Lie on back. Cross ankle over opposite knee. Pull leg toward chest.</div>
+      <div class="tip">30 sec/side. Deep glute/hip release.</div>
+      <div class="missing-vid">⬇ Download figure4.mp4 using prompt below</div>
+    </div>
+
+    <div class="exercise-card">
+      <span class="badge cooldown-badge">COOLDOWN</span>
+      <div class="name">Happy Baby Pose</div>
+      <div class="video-wrap">
+        <div class="video-placeholder">Video not downloaded yet</div>
+      </div>
+      <div class="desc">Lie on back. Grab outsides of feet, knees wide, soles to ceiling. Rock gently.</div>
+      <div class="tip">30 sec. Inner-thigh and hip release.</div>
+      <div class="missing-vid">⬇ Download happy_baby.mp4 using prompt below</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ==================== OFF-DAY ==================== -->
+<div id="offday" class="session-section">
+  <div class="session-header">Off-Day Micro-Mobility — 3–5 min</div>
+  <div class="session-sub">Pick 4 moves. Do on rest days or when picking up baby feels stiff.</div>
+  <div class="exercise-grid">
+
+    <div class="exercise-card">
+      <span class="badge offday-badge">OFF-DAY</span>
+      <div class="name">Hip Flexor Stretch</div>
+      <div class="video-wrap">
+        <div class="video-placeholder">Video not downloaded yet</div>
+      </div>
+      <div class="desc">Half-kneeling. Tilt pelvis forward. Feel stretch in front of bottom hip.</div>
+      <div class="tip">30 sec/side. ⚠️ STOP if left side catches.</div>
+      <div class="missing-vid">⬇ Download hip_flexor.mp4 using prompt below</div>
+    </div>
+
+    <div class="exercise-card">
+      <span class="badge offday-badge">OFF-DAY</span>
+      <div class="name">Ankle Rocks (Knee-to-Wall)</div>
+      <div class="video-wrap">
+        <div class="video-placeholder">Video not downloaded yet</div>
+      </div>
+      <div class="desc">Stand facing wall. Step foot back. Drive knee forward over toes, heel down.</div>
+      <div class="tip">6 reps/side.</div>
+      <div class="missing-vid">⬇ Download ankle_rocks.mp4 using prompt below</div>
+    </div>
+
+    <div class="exercise-card">
+      <span class="badge offday-badge">OFF-DAY</span>
+      <div class="name">Hip Circles</div>
+      <div class="video-wrap">
+        <div class="video-placeholder">No video</div>
+      </div>
+      <div class="desc">Stand on one leg. Make large circles with the other hip.</div>
+      <div class="tip">8 circles each direction per leg.</div>
+    </div>
+
+    <div class="exercise-card">
+      <span class="badge offday-badge">OFF-DAY</span>
+      <div class="name">Shoulder Dislocates</div>
+      <div class="video-wrap">
+        <div class="video-placeholder">Video not downloaded yet</div>
+      </div>
+      <div class="desc">Broomstick/band wide grip. Pass overhead from front to back and back.</div>
+      <div class="tip">8 slow reps. Opens shoulder mobility.</div>
+      <div class="missing-vid">⬇ Download shoulder_dislocate.mp4 using prompt below</div>
+    </div>
+
+    <div class="exercise-card">
+      <span class="badge offday-badge">OFF-DAY</span>
+      <div class="name">Thoracic Extension</div>
+      <div class="video-wrap">
+        <div class="video-placeholder">Video not downloaded yet</div>
+      </div>
+      <div class="desc">Foam roller/towel across mid-back. Lie back, hands behind head, gently arch.</div>
+      <div class="tip">1 min. Sitting-all-day counteraction.</div>
+      <div class="missing-vid">⬇ Download thoracic_extension.mp4 using prompt below</div>
+    </div>
+
+    <div class="exercise-card">
+      <span class="badge offday-badge">OFF-DAY</span>
+      <div class="name">Child's Pose Side Walk</div>
+      <div class="video-wrap">
+        <div class="video-placeholder">Video not downloaded yet</div>
+      </div>
+      <div class="desc">Start in child's pose. Walk both hands to one side, hold, return, other side.</div>
+      <div class="tip">30 sec per side. Lateral spine stretch.</div>
+      <div class="missing-vid">⬇ Download childs_pose_side.mp4 using prompt below</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ==================== PHASE 2 PREVIEW ==================== -->
+<div id="phase2" class="session-section">
+  <div class="session-header">Phase 2 Preview — Weeks 5–8</div>
+  <div class="session-sub">Kettlebells + advanced animal flow. Full program after Phase 1 assessment.</div>
+  <div class="exercise-grid">
+
+    <div class="exercise-card">
+      <span class="badge phase2-badge">KETTLEBELL • 15 LB</span>
+      <div class="name">Goblet Squat</div>
+      <div class="video-wrap">
+        <div class="video-placeholder">Video not downloaded yet</div>
+      </div>
+      <div class="desc">Hold 15 lb KB at chest level. Squat deep. Elbows between knees.</div>
+      <div class="tip">8–12 reps.</div>
+      <div class="missing-vid">⬇ Download goblet_squat.mp4 using prompt below</div>
+    </div>
+
+    <div class="exercise-card">
+      <span class="badge phase2-badge">KETTLEBELL • 15 LB</span>
+      <div class="name">Single-Arm Row</div>
+      <div class="video-wrap">
+        <div class="video-placeholder">Video not downloaded yet</div>
+      </div>
+      <div class="desc">One hand on support, pull KB from floor to hip. Squeeze shoulder blade.</div>
+      <div class="tip">8–10 per side.</div>
+      <div class="missing-vid">⬇ Download kb_row.mp4 using prompt below</div>
+    </div>
+
+    <div class="exercise-card">
+      <span class="badge phase2-badge">KETTLEBELL • 15 LB</span>
+      <div class="name">KB Halo</div>
+      <div class="video-wrap">
+        <div class="video-placeholder">Video not downloaded yet</div>
+      </div>
+      <div class="desc">Hold KB by horns at chest. Circle around head. Opposite direction each rep.</div>
+      <div class="tip">5 circles each direction.</div>
+      <div class="missing-vid">⬇ Download kb_halo.mp4 using prompt below</div>
+    </div>
+
+    <div class="exercise-card">
+      <span class="badge phase2-badge">KETTLEBELL • 35 LB</span>
+      <div class="name">KB Deadlift</div>
+      <div class="video-wrap">
+        <div class="video-placeholder">Video not downloaded yet</div>
+      </div>
+      <div class="desc">Hinge at hips, flat back. Both hands on KB. Stand tall by squeezing glutes.</div>
+      <div class="tip">6–10 reps. Builds posterior chain for baby-bending.</div>
+      <div class="missing-vid">⬇ Download kb_deadlift.mp4 using prompt below</div>
+    </div>
+
+    <div class="exercise-card">
+      <span class="badge phase2-badge">ANIMAL FLOW</span>
+      <div class="name">Beast Kick-Through</div>
+      <div class="video-wrap">
+        <video muted playsinline loop controls id="vid-beast" preload="metadata">
+          <source src="videos/beast_kick.mp4" type="video/mp4">
+        </video>
+        <button class="fullscreen-btn" onclick="goFullscreen('vid-beast')" title="Expand">⛶</button>
+      </div>
+      <div class="desc">From beast hold, lift knee, rotate chest under leg, open arm to ceiling.</div>
+      <div class="tip">5 reps/side.</div>
+    </div>
+
+    <div class="exercise-card">
+      <span class="badge phase2-badge">ANIMAL FLOW</span>
+      <div class="name">Tarantula Crawl</div>
+      <div class="video-wrap">
+        <div class="video-placeholder">Video not downloaded yet</div>
+      </div>
+      <div class="desc">Low position, step foot wide outside same-side hand. Crawl with wide steps.</div>
+      <div class="tip">10 steps per direction.</div>
+      <div class="missing-vid">⬇ Download tarantula_crawl.mp4 using prompt below</div>
+    </div>
+
+  </div>
+</div>
+
+<div class="footer">
+  Project Starksuit — Phase 1 • 27 local videos when complete • Play locally, no internet required
+</div>
+
+<script>
+function goFullscreen(id) {
+  var video = document.getElementById(id);
+  if (!video) return;
+  if (video.requestFullscreen) {
+    video.requestFullscreen();
+  } else if (video.webkitRequestFullscreen) {
+    video.webkitRequestFullscreen();
+  } else if (video.webkitEnterFullscreen) {
+    video.webkitEnterFullscreen();
+  }
+}
+
+function showSession(id) {
+  document.querySelectorAll('.session-section').forEach(function(s) { s.classList.remove('active'); });
+  document.querySelectorAll('.nav-tab').forEach(function(t) { t.classList.remove('active'); });
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+}
+</script>
+
+</body>
+</html>
